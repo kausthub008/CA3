@@ -141,7 +141,7 @@
                                             echo "<a class='btn btn-danger' href='delete_exp.php?expid=". $row['expid'] ."'>delete</a>";
                                             //echo "<a type='button' data-toggle='modal' data-target='#addPage?expid=". $row['expid'] ."'>details</a>";
                                             //echo "<a class='btn btn-danger' href='readstudy.php?studyid=". $row['studyid'] ."'>details</a>";
-                                            echo "<a class='btn btn-danger' href='readexp.php?expid=". $row['expid'] ."'>details</a>";
+                                            echo "<a class='btn btn-default' href='readexp.php?expid=". $row['expid'] ."'>details</a>";
                                             echo "</td>";
                                     echo "</tr>";
                                 }
@@ -168,9 +168,9 @@
       </div>
     </section>
 
-    <footer id="footer">
+ <!--   <footer id="footer">
       <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
+    </footer>  -->
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>

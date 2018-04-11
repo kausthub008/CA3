@@ -16,7 +16,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $ename_err = "Please enter a Experiment name.";
       //Validate if there are any special characters using regular expressions
     } elseif(!filter_var(trim($_POST["ename"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
-        $ename_err = 'Please enter a valid name.';
+        $ename_err = 'Please enter a valid Experiment name.';
       //If the name is proper assign it to variable
     } else{
         
@@ -201,8 +201,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   <div class="form-group">
                   </div>
               
-                  <input type="submit" class="btn btn-default" value="Submit">
-                  <a href="Task.php" class="btn btn-default">Cancel</a>
+                  <input type="submit" class="btn btn-danger" value="Submit">
+                  <a href="Experiment.php" class="btn btn-default">Cancel</a>
                 </form> 
              </div>
               </div>

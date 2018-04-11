@@ -5,6 +5,7 @@ include ('config.php');
 // Define variables and initialize with empty values
 $expid = $expname = $taskid = $tname = $tinstruction = $tlink = "";
 $expid_err = $expname_err = $taskid_err = $tname_err = $tinstruction_err = $tlink_err = "";
+$error = "";
  
 // Processing form data when form is submitted
 if(isset($_POST["expid"]) && !empty($_POST["expid"])){
@@ -232,106 +233,57 @@ echo sizeof($checkboxm);
               <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
             </div>
-
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Edit Experiment</h3>
               </div>
               <div class="panel-body">
-                
-                 <?php
-                  $id = $_GET['expid'];
-                  if(isset($id) && !empty($id)){
-                  //echo "ff";
-                  //require_once 'config.php';
-                    
-                      $sql ="SELECT b.taskid as TaskID,b.tname as TaskName FROM taskexp a,task b where a.expid =". $id ." and a.taskid=b.taskid";
-  
-                        //If the exception is thrown, this text will not be shown
-                        //echo 'If you see this, the number is 1 or below';
-                  echo "<table border='1' style='float: left'>
-                  <tr>
-                  <th>TaskID</th>
-                  <th>TaskName</th>
-                  </tr>";
-                    //print "query1 = $sql";
-                 if($result = $pdo->query($sql)){
-                 //echo"dd";
-                  while($row = $result->fetch())
-                  {
-                      echo "<tr>";
-                      echo "<td>" . $row['TaskID'] . "</td>";
-                      echo "<td>" . $row['TaskName'] . "</td>";
-                      echo "</tr>";
-                   }
-                   //echo "<br>";
-                    }                  
-                    echo "</table>";
-                }else{
-                // Check existence of id parameter
-                if(empty(trim($_GET["expid"]))){
-                // URL doesn't contain id parameter. Redirect to error page
-                 header("location: error.php");
-                exit();
-                 }
-                }
-                //
-               ?>
-                <br>
-                <br>
                 <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
-                  <br>
-                  <div class="form-group <?php echo (!empty($expname_err)) ? 'has-error' : ''; ?>">
-                    <br>
-                    <label>name</label>
+               
+                
+                  
+                  <div class="form-group">
+                    <p>
+                    <label>Experiment Name</label>
                     <input type="text" name="expname" class="form-control" value="<?php echo $expname; ?>">
                     <span class="help-block"><?php echo $expname_err;?></span>
+                    </p>
                   </div>
                    <div class="form-group">
                     <label>Associated Tasks</label>
                     <br>
                     <?php  
-                    //require_once 'config.php';
+                    require_once 'config.php';
+                      //select and display all the tasks that are available 
                     $sql1 = "SELECT taskid,tname FROM task";
-                   //echo "dd";
                     if($tname = $pdo->query($sql1)){
-                      //check if there were an records in the table
-                          
+                      //Display all the task id's and its name in the form of checkbox
                         while ($row = $tname->fetch())
                         {                            
                             echo "<tr><td>";
                             echo "<input type='checkbox' name='tname[]' value = ";
                             echo $row['taskid'];
                             echo " />";
-                            //echo " />";
+                            echo $row['taskid'];
+                            echo "          ";
                             echo $row['tname'];
                             echo "</td></tr><br/>";
                         }
                     }
                      ?>
+                     <span class="help-block"><?php echo $error;?></span>
                   </div>
+                  
                   <input type="hidden" name="expid" value="<?php echo $id; ?>"/>
-                  <input type="hidden" name="studyid" value="<?php echo $ids; ?>"/>                  
-                  <input type="submit" class="btn btn-default" value="Submit">
+                  <input type="hidden" name="studyid" value="<?php echo $ids; ?>"/> 
+                  <br>
+                  <input type="submit" class="btn btn-danger" value="Submit">
                   <a href="Experiment.php" class="btn btn-default">Cancel</a>
                 </form> 
+              
               </div>
               </div>
           </div>
