@@ -105,7 +105,7 @@
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Listed Users</h3>
               </div>
               <div class="panel-body">
                  <br>
@@ -167,9 +167,9 @@
       </div>
     </section>
 
-    <footer id="footer">
+  <!--  <footer id="footer">
       <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
+    </footer>  -->
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>

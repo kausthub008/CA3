@@ -74,7 +74,7 @@ if(isset($_POST["userid"]) && !empty($_POST["userid"])){
             $stmt->bindParam(':gender', $param_gender);
             $stmt->bindParam(':age', $param_age);
             $stmt->bindParam(':email', $param_email);
-          $stmt->bindParam(':userid', $param_userid);
+            $stmt->bindParam(':userid', $param_userid);
             
             // Set parameters
             $param_name = $name;
@@ -283,9 +283,9 @@ if(isset($_POST["userid"]) && !empty($_POST["userid"])){
       </div>  
     </section>
 
-    <footer id="footer">
+   <!-- <footer id="footer">
       <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
+    </footer> -->
   <script>
      CKEDITOR.replace( 'editor1' );
  </script>

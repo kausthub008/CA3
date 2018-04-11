@@ -156,58 +156,9 @@
       </div>
     </section>
 
-    <footer id="footer">
+   <!-- <footer id="footer">
       <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
-     <!-- Modals -->
-
-     <!-- Add Task -->
-<!--    <div class="modal fade" id="addtask" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form>
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Add Task</h4>
-      </div>
-        <?php
-        /*require_once 'config.php';
-        $id = trim($_POST["abc"]);
-        echo "id = $id";
-        $abc = "SELECT taskid,tname,tinstruction,tlink FROM task WHERE taskid = $id";
-        print "query1 = $abc";
-        $pat = $pdo->query($abc);
-        $row1 = $pat->fetch();*/
-        
-        ?>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Task ID</label>
-          <input type="text" name="expname" class="form-control" placeholder="Enter Task ID" value="<?php /*echo $row1[taskid];*/ ?>">
-        </div>
-        <div class="form-group">
-          <label>Task Name</label>
-          <input type="text" class="form-control" placeholder="Enter Task Name"></textarea>
-        </div>
-      
-        <div class="form-group">
-          <label>Task instruction</label>
-          <input type="text" class="form-control" placeholder="Add Task link...">
-        </div>
-        <div class="form-group">
-          <label>Task link</label>
-          <textarea name="editor1" class="form-control"placeholder="Enter Task Description"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-      </div>
-    </form>
-    </div>
-  </div>
-</div> -->
-
+    </footer> -->
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>
