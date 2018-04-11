@@ -220,41 +220,27 @@ if(isset($_POST["taskid"]) && !empty($_POST["taskid"])){
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
             </div>
 
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Edit the Task</h3>
               </div>
               <div class="panel-body">
                 <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
                   <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
-                    <label>name</label>
+                    <label>Tasname</label>
                     <input type="text" name="tname" class="form-control"  placeholder="name" value="<?php echo $tname; ?>">
                     <span class="help-block"><?php echo $name_err;?></span>
                   </div>
                   <div class="form-group <?php echo (!empty($tinstruction_err)) ? 'has-error' : ''; ?>">
-                    <label>instruction</label>
+                    <label>Task Instruction</label>
                     <input type="text" name="tinstruction" class="form-control" placeholder="Add Some Tags..." value="<?php echo $tinstruction; ?>">
                      <span class="help-block"><?php echo $tinstruction_err;?></span>
                   </div>
                   <div class="form-group <?php echo (!empty($tlink_err)) ? 'has-error' : ''; ?>">
-                    <label>link</label>
+                    <label>Tasklink</label>
                     <input type="text" name="tlink"class="form-control" placeholder="Add Meta Description..." value="<?php echo $tlink; ?>">
                     <span class="help-block"><?php echo $tlink_err;?></span>
                   </div>

@@ -240,26 +240,12 @@ if(isset($_POST["userid"]) && !empty($_POST["userid"])){
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
             </div>
 
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Edit the User</h3>
               </div>
               <div class="panel-body">
                 <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
@@ -287,7 +273,7 @@ if(isset($_POST["userid"]) && !empty($_POST["userid"])){
                     <span class="help-block"><?php echo $email_err;?></span>
                   </div>
                   <input type="hidden" name="userid" value="<?php echo $userid; ?>"/>
-                  <input type="submit" class="btn btn-default" value="Submit">
+                  <input type="submit" class="btn btn-danger" value="Submit">
                   <a href="users.php" class="btn btn-default">Cancel</a>
                 </form> 
               </div>

@@ -87,26 +87,12 @@
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
             </div>
 
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Available Tasks</h3>
               </div>
               <div class="panel-body">
                  <br>
@@ -127,10 +113,8 @@
                           //echo "<table border='1'>";
                                 echo "<thead>";
                                     echo "<tr>";
-                                        echo "<th>taskid</th>";
-                                        echo "<th>tname</th>";
-                                        echo "<th>tinstruction</th>";
-                                        echo "<th>tlink</th>";
+                                        echo "<th>Taskid</th>";
+                                        echo "<th>Taskname</th>";
                                         echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
@@ -139,13 +123,11 @@
                                     echo "<tr>";
                                         echo "<td>" . $row['taskid'] . "</td>";
                                         echo "<td>" . $row['tname'] . "</td>";
-                                        echo "<td>" . $row['tinstruction'] . "</td>";
-                                        echo "<td>" . $row['tlink'] . "</td>";
                                         echo "<td>";
                                   //display read, update and elete records
-                                            echo "<a class='btn btn-default' href='edit_task.php?taskid=". $row['taskid'] ."'>edit</a>";
-                                            echo "<a class='btn btn-danger' href='delete_task.php?taskid=". $row['taskid'] ."'>delete</a>";
-                                            echo "<a class='btn btn-danger' href='readtask.php?taskid=". $row['taskid'] ."'>details</a>";
+                                            echo "<a class='btn btn-default' href='edit_task.php?taskid=". $row['taskid'] ."'>Edit</a>";
+                                            echo "<a class='btn btn-danger' href='delete_task.php?taskid=". $row['taskid'] ."'>Delete</a>";
+                                            echo "<a class='btn btn-default' href='readtask.php?taskid=". $row['taskid'] ."'>Details</a>";
                                             //echo "<button class='btn btn-primary' name='abc' data-target='#addtask' data-toggle='modal' value = ". $row['taskid'] .">Visualizar</button>";            
                                             echo "</td>";
                                     echo "</tr>";

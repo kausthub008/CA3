@@ -80,12 +80,12 @@
            <?php
         require_once 'config.php';
          $id = $_GET['taskid'];
-        echo "id = $id";
+        //echo "id = $id";
         if(isset($id) && !empty($id)){
-                  echo "ff";
+                  //echo "ff";
                   require_once 'config.php';
                   $abc = "SELECT taskid,tname,tinstruction,tlink FROM task WHERE taskid = $id";
-        print "query1 = $abc";
+        //print "query1 = $abc";
         $pat = $pdo->query($abc);
         $row1 = $pat->fetch();
         } else{
@@ -93,7 +93,7 @@
     if(empty(trim($_GET["taskid"]))){
         // URL doesn't contain id parameter. Redirect to error page
         //header("location: error.php");
-      echo "rpg";
+      //echo "rpg";
         exit();
     }
 }

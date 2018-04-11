@@ -228,7 +228,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <input type="text" name="email"class="form-control" value="<?php echo $email; ?>">
                     <span class="help-block"><?php echo $email_err;?></span>
                   </div>
-                  <input type="submit" class="btn btn-default" value="Submit">
+                  <input type="submit" class="btn btn-danger" value="Submit">
                   <a href="users.php" class="btn btn-default">Cancel</a>
                 </form> 
              </div>
