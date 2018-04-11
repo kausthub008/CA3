@@ -8,31 +8,23 @@ $username_err = $password_err = "";
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-      
       // username and password sent from form 
-  
       $username = trim($_POST["username"]);
-   
-    
-    // Validate address
-    $password = trim($_POST["password"]);
+      $password = trim($_POST["password"]);
    
 		
       $sql = "SELECT username,password FROM webusers WHERE username = '$username' and password = '$password'";
-     
-      // If result matched $myusername and $mypassword, table row must be 1 row
+      // If result matched $username and $password, table row must be 1 row
 		// Check if the query was executed
       if($result = $pdo->query($sql)){
-
-				//check if there were an records in the table
-        if($result->rowCount() > 0){
+				 //check if there were an records in the table
+          if($result->rowCount() > 0){
           
-         /*session_register("myusername");*/
+         /*session_register("username");*/
          $_SESSION['login_user'] = $username;
-         
+         //once login is validated the control goes to the dashboard home
          header("location: index.php");
       }else{
-           /*echo "<p class='lead'><em>invalid login</em></p>";*/
 					$error = "Your Login Name or Password is invalid";
             }
 			} else{
@@ -60,7 +52,7 @@ unset($pdo);
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"> Admin Area <small>Login</small></h1>
+            <h1 class="text-center"> MU Research Dashboard <small>Login</small></h1>
           </div>
         </div>
       </div>
@@ -82,7 +74,8 @@ unset($pdo);
                   </div>
                   <span class="help-block"><?php echo $error;?></span>
                   <button type="submit" class="btn btn-default btn-block">Login</button>
-                  <a href="login.php" class="btn btn-default btn-block">cancel</a>  
+                  <a href="login.php" class="btn btn-default btn-block">cancel</a> 
+							    <a href="signup.php" class="btn btn-default btn-block">Register</a>
               </form>
           </div>
         </div>

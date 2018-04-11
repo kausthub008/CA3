@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Dashboard</title>
+    <title>Admin Area | MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -24,7 +24,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -33,8 +33,8 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Prajeth</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <li><a>Welcome</a></li>
+            <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -44,7 +44,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-10">
-            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard <small>Manage Your Site</small></h1>
+            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard <small></small></h1>
           </div>
           <div class="col-md-2">
             <div class="dropdown create">
@@ -64,48 +64,25 @@
       </div>
     </header>
 
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">Dashboard</li>
-        </ol>
-      </div>
-    </section>
-
     <section id="main">
       <div class="container">
         <div class="row">
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
               </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
-            </div>
-
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Orders</h3>
               </div>
               <div class="panel-body">
                  <br>
@@ -115,17 +92,19 @@
                     require_once 'config.php';
                     $asd = $_GET["expid"];
                     // Attempt select query execution
-                    //$sql = "SELECT taskid,tname,tinstruction,tlink FROM task";
-                  $sql = "SELECT a.orderid FROM orders a, orderexp b WHERE a.orderid = b.orderid AND b.expid ='". $asd ."';";
-                  
+                   
+                  $sql = "SELECT a.orderid FROM orders a, orderexp b WHERE a.orderid = b.orderid AND b.expid ='". $asd ."'";
+                 
                   // Check if the query was executed
                     if($result = $pdo->query($sql)){
                       //check if there were an records in the table
                         if($result->rowCount() > 0){
-                           // echo "<table class='table table-striped table-hover'>";
+                           
                                 echo "<thead>";
                                     echo "<tr>";
                                         echo "<th>orderid</th>";
+                                        echo "<th>Associated Tasks</th>";
+                                        echo "<th>Associated Users</th>";
                                         echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
@@ -136,24 +115,24 @@
                                         
                                          $id = $row['orderid'];
                                         $sql1 ="SELECT b.taskid as TaskID FROM orderexp a,ordertask b where a.orderid = '". $id ."' and a.orderid=b.orderid";
+                                    //display associated tasks
                                         if($result1 = $pdo->query($sql1)){
                                         $ab = "";
                                            while($row1 = $result1->fetch()){
-                                             // echo "<tr>";
+                                            
                                                  $ab = $ab . $row1['TaskID'] ."  ";
-                                                 //echo "<td>" . $row1['TaskID'] . "</td>";
-                                             //echo "<td>";
+                                                 
                                            }
                                           echo "<td>" . $ab . "</td>";
                                         }
                                         $sql2 ="SELECT b.userid as userid FROM orderexp a,orderuser b where a.orderid = '". $id ."' and a.orderid=b.orderid";
+                                  //display associated Users
                                         if($result2 = $pdo->query($sql2)){
                                         $ab1 = "";
                                            while($row2 = $result2->fetch()){
-                                             // echo "<tr>";
+                                            
                                                  $ab1 = $ab1 . $row2['userid'] ."  ";
-                                                 //echo "<td>" . $row1['TaskID'] . "</td>";
-                                             //echo "<td>";
+                                                
                                            }
                                           echo "<td>" . $ab1 . "</td>";
                                         }
@@ -162,8 +141,7 @@
                                   //display read, update and elete records
                                             echo "<a class='btn btn-default' href='edit_order.php?orderid=". $row['orderid'] ."&expid=". $asd ."'>edit</a>";
                                             echo "<a class='btn btn-danger' href='delete_order.php?orderid=". $row['orderid'] ."&expid=". $asd ."'>delete</a>";
-                                            //echo "<a type='button' data-toggle='modal' data-target='#addPage?expid=". $row['expid'] ."'>details</a>";
-                                            echo "<a class='btn btn-danger' href='orders.php'>details</a>";
+                                            echo "<a class='btn btn-default' href='readexp.php?expid=". $asd ."'>Back</a>";                                            
                                             echo "</td>";
                                     echo "</tr>";
                                 }
@@ -190,9 +168,7 @@
       </div>
     </section>
 
-    <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
+
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>

@@ -25,31 +25,31 @@ if(isset($_POST["studyid"]) && !empty($_POST["studyid"])){
     } else{
         $studyname = $input_sname;
     }
-$checkbox = $_POST['expname']; // Displays value of checked checkbox.
-echo sizeof($checkbox);
-      // Check input errors before inserting in database
+//collect the checked values into the array
+  $checkbox = $_POST['expname']; 
+
+      // check if the experiment is associated with other study
   
    for ($k=0; $k<sizeof($checkbox); $k++){
      
       $abc = "SELECT * FROM studyexp where studyid != $studyid and expid = $checkbox[$k]";
-     print "query = $abc";
    $del = $pdo->prepare($abc);
     $del->execute();
     $count = $del->rowCount();
-     print "count = $count";
      if($count > 0)
       {
         $error = "You cannot add this experiment since it is already used in different study";
       }
    }
   
+  //check for all errors
   if(empty($error)){
     if(empty($studyname_err)){
-        // Prepare an insert statement
+       
       
         $sql = "UPDATE study SET studyname=:studyname WHERE studyid=$studyid";
         $sqla = "delete from studyexp where studyid=$studyid";
-        
+         // Prepare an insert and delete statement
         if($stmt = $pdo->prepare($sql)){
           if($stmta = $pdo->prepare($sqla)){
                      
@@ -64,19 +64,17 @@ echo sizeof($checkbox);
               
                 // Records updated successfully. Redirect to landing page
               if($stmta->execute()){
-                               
+                      
+                //Insert into the table containing associations
                 for ($i=0; $i<sizeof($checkbox); $i++)
                    {
              
                       $query1="INSERT INTO studyexp (studyid,expid) VALUES ($studyid,$checkbox[$i])"; 
                      
-                       print "query1 = $query1";      
-                        //echo "fff";
                      if($stmtb = $pdo->prepare($query1)){
-                       echo "dd";
+                      
                      if($stmtb->execute()){
-                       echo "prty";
-                         // exit();
+                       
                          } else{
                         echo "Something went wrong. Please try again later.";
                              }
@@ -99,8 +97,7 @@ echo sizeof($checkbox);
         unset($stmt);
     }
 }
-    // Close connection
-    //unset($pdo);
+    
 } else{
     // Check existence of id parameter before processing further
     if(isset($_GET["studyid"]) && !empty(trim($_GET["studyid"]))){
@@ -130,7 +127,7 @@ echo sizeof($checkbox);
                     $studyname = $row["studyname"];
                      //print "query1 = $expname";                 
                 } else{
-                     echo "dd";
+                    
                     // URL doesn't contain valid id. Redirect to error page
                     header("location: error.php");
                     exit();
@@ -144,8 +141,6 @@ echo sizeof($checkbox);
         // Close statement
         unset($stmt);
         
-        // Close connection
-        //unset($pdo);
     }  else{
        
         // URL doesn't contain id parameter. Redirect to error page
@@ -160,7 +155,7 @@ echo sizeof($checkbox);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Dashboard</title>
+    <title>MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -180,7 +175,7 @@ echo sizeof($checkbox);
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -189,8 +184,8 @@ echo sizeof($checkbox);
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Prajeth</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <li><a>Welcome</a></li>
+            <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -200,7 +195,7 @@ echo sizeof($checkbox);
       <div class="container">
         <div class="row">
           <div class="col-md-10">
-            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard <small>Manage Your Site</small></h1>
+            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard <small></small></h1>
           </div>
           <div class="col-md-2">
             <div class="dropdown create">
@@ -212,7 +207,7 @@ echo sizeof($checkbox);
                 <li><a type="button" href="create_user.php">Add user</a></li>
                 <li><a type="button" href="create_task.php">Add Task</a></li>
                 <li><a type="button" href="create_exp.php">Add Experiment</a></li>
-                 <li><a type="button" href="create_study.php">Add Study</a></li>
+                <li><a type="button" href="create_study.php">Add Study</a></li>
               </ul>
             </div>
           </div>
@@ -223,7 +218,7 @@ echo sizeof($checkbox);
     <section id="breadcrumb">
       <div class="container">
         <ol class="breadcrumb">
-          <li class="active">Dashboard</li>
+          <li class="active">MU Research Dashboard</li>
         </ol>
       </div>
     </section>
@@ -234,28 +229,14 @@ echo sizeof($checkbox);
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
               </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
 
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
@@ -266,33 +247,11 @@ echo sizeof($checkbox);
               <div class="panel-body">
                 
                  <?php
-                  $id = $_GET['studyid'];
+                    require_once 'config.php';
+                    $id = $_GET['studyid'];
+                //check if the id parameter is collected
                   if(isset($id) && !empty($id)){
-                  //echo "ff";
-                  //require_once 'config.php';
-                    
-                      $sql ="SELECT b.expid as experimentID,b.expname as experimentname FROM studyexp a,experiment b where a.studyid =". $id ." and a.expid=b.expid";
-                        //If the exception is thrown, this text will not be shown
-                        //echo 'If you see this, the number is 1 or below';
-                  echo "<table border='1' style='float: left'>
-                  <tr>
-                  <th>ExpID</th>
-                  <th>Expname</th>
-                  </tr>";
-                    //print "query1 = $sql";
-                 if($result = $pdo->query($sql)){
-                 //echo"dd";
-                  while($row = $result->fetch())
-                  {
-                      echo "<tr>";
-                      echo "<td>" . $row['experimentID'] . "</td>";
-                      echo "<td>" . $row['experimentname'] . "</td>";
-                      echo "</tr>";
-                   }
-                   //echo "<br>";
-                    }                  
-                    echo "</table>";
-                    
+                 
                 }else{
                 // Check existence of id parameter
                 if(empty(trim($_GET["studyid"]))){
@@ -314,7 +273,7 @@ echo sizeof($checkbox);
                     <label>Associated Experiemnts</label>
                     <br>
                     <?php  
-                    //require_once 'config.php';
+                    require_once 'config.php';
                     $sql1 = "SELECT expid,expname FROM experiment";
                    //echo "dd";
                     if($tname = $pdo->query($sql1)){
@@ -345,9 +304,7 @@ echo sizeof($checkbox);
       </div>  
     </section>
 
-    <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
+    
   <script>
      CKEDITOR.replace( 'editor1' );
  </script>

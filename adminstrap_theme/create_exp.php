@@ -41,7 +41,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
          $param_ename = $ename;
          // Attempt to execute the prepared statement
           if($stmt->execute()){
-            // Records created successfully. Redirect to datapage containing all experiments
+            
             //Select the expid for the recently inserted experiemnt name and load it into $row1
             $query = "SELECT expid FROM experiment WHERE expname = '". $ename ."'";
             $result = $pdo->query($query);
@@ -83,7 +83,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Dashboard</title>
+    <title>Admin Area | MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -103,7 +103,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -112,7 +112,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-           <li><a href="logout.php">Logout</a></li>
+           <li><a>Welcome</a></li>
+            <li><a href="login.php">Logout</a></li>
             
           </ul>
         </div><!--/.nav-collapse -->
@@ -150,7 +151,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
               </a>
               <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
               <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
@@ -211,8 +212,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </div>
       </div>
     </section>
-    <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
+   
+      <p></p>
     </footer>
       <script>
      CKEDITOR.replace( 'editor1' );

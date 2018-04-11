@@ -22,7 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $oname = $input_oname;
     }
   $id1 = $_POST['expid'];
-  print "ss = $id1";
+
     // Check input errors before inserting in database
   if(empty($oname_err)){
     if(isset($id1) && !empty($id1)){
@@ -30,7 +30,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Prepare an insert statement
       
          $sql = "INSERT INTO orders (ordername) VALUES (:oname)";
-          print "query = $sql";
+        
         if($stmt = $pdo->prepare($sql)){
                       // Bind variables to the prepared statement as parameters
             $stmt->bindParam(':oname', $param_oname);
@@ -40,14 +40,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
            
             // Attempt to execute the prepared statement
             if($stmt->execute()){
-              echo "ick";
+            
                // Records created successfully. Redirect to data page
                // header("location: Task.php");
               //$conn = mysql_connect('localhost', 'kausthub', '1234');
               $query = "SELECT orderid FROM orders WHERE ordername = '". $oname ."'";
               $result = $pdo->query($query);
               $row1 = $result->fetch();
-              echo $row1;
+             
               //this command is used to exit from the  if statement 
                 //exit();
             } else{
@@ -58,74 +58,51 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Close statement
         unset($stmt);
     }
-// Make a MySQL Connection
-      
-//mysql_connect("localhost", "kausthub", "1234") or die(mysql_error());
-//mysql_select_db("test") or die(mysql_error());
-//if (isset($_POST['tname'])){
+
+    //collect the checkbox values into variable
 $checkbox = $_POST['tname']; // Displays value of checked checkbox.
 $checkboxa = $_POST['uname'];
-//}
-  
-  
-//foreach ($checkbox as $color){ 
-  // echo $color."<br />";
-//}
-echo sizeof($checkbox);
-  echo sizeof($checkboxa);
-//echo sizeof($color);
+
+//prepare sql 
  $queryo="INSERT INTO orderexp (orderid,expid) VALUES ($row1[0],$id1)";  
-  print "query1 = $queryo";    
+     
  $stmto = $pdo->prepare($queryo);
  if($stmto->execute()){
-   echo "bar";
+   //insert tasks into association table
     for ($i=0; $i<sizeof($checkbox); $i++)
         {
              
             $query1="INSERT INTO ordertask (orderid,taskid) VALUES ($row1[0],$checkbox[$i])";  
-            print "query1 = $query1";      
-        //echo "fff";
+                 
+        
             if($stmt1 = $pdo->prepare($query1)){
-                echo "dd";
-            //$param_ename = $ename;
-           
-            // Attempt to execute the prepared statement
+               
+          
             if($stmt1->execute()){
-             echo "prty";
-                // Records created successfully. Redirect to data page
-                //header("location: Task.php");
-              //this command is used to exit from the  if statement 
-               // exit();
+           
             } else{
                 echo "Something went wrong. Please try again later.";
             }
         }
       else{echo "some error";}
-           // mysql_query($query) or die (mysql_error() );
+           
         }
+   //insert users into association table
   for ($j=0; $j<sizeof($checkboxa); $j++)
         {
              
             $query2="INSERT INTO orderuser (orderid,userid) VALUES ($row1[0],$checkboxa[$j])";  
-            print "query2 = $query2";      
-        //echo "fff";
-            if($stmt2 = $pdo->prepare($query2)){
-                echo "ff";
-            //$param_ename = $ename;
            
-            // Attempt to execute the prepared statement
+            if($stmt2 = $pdo->prepare($query2)){
+              
             if($stmt2->execute()){
-             echo "prty1";
-                // Records created successfully. Redirect to data page
-                //header("location: Experiment.php");
-              //this command is used to exit from the  if statement 
-                //exit();
+             
             } else{
                 echo "Something went wrong. Please try again later.";
             }
         }
       else{echo "some error";}
-           // mysql_query($query) or die (mysql_error() );
+          
         }
    header("location: Experiment.php");
   }
@@ -143,20 +120,14 @@ echo sizeof($checkbox);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Dashboard</title>
+    <title> MU Research Dashboard </title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <script src="http://cdn.ckeditor.com/4.6.1/standard/ckeditor.js"></script>
   </head>
   <body>
- <style>
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-</style>
+ 
     <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
@@ -169,7 +140,7 @@ echo sizeof($checkbox);
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -178,8 +149,8 @@ echo sizeof($checkbox);
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Prajeth</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <li><a>Welcome</a></li>
+            <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -189,7 +160,7 @@ echo sizeof($checkbox);
       <div class="container">
         <div class="row">
           <div class="col-md-10">
-            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard <small>Manage Your Site</small></h1>
+            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard <small></small></h1>
           </div>
           <div class="col-md-2">
             <div class="dropdown create">
@@ -212,7 +183,7 @@ echo sizeof($checkbox);
     <section id="breadcrumb">
       <div class="container">
         <ol class="breadcrumb">
-          <li class="active">Dashboard</li>
+          <li class="active">MU Research Dashboard</li>
         </ol>
       </div>
     </section>
@@ -223,34 +194,21 @@ echo sizeof($checkbox);
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
               </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
 
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
+
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Create Order</h3>
               </div>
               <div class="panel-body">
                  <br>
@@ -261,7 +219,7 @@ echo sizeof($checkbox);
                     <span class="help-block"><?php echo $oname_err;?></span>
                   </div>
                   <div class="form-group">
-                    <label>instruction</label>
+                    <label>Associate Tasks</label>
                     <br>
                     <?php  
                     require_once 'config.php';
@@ -285,7 +243,7 @@ echo sizeof($checkbox);
                      ?>
                   </div>
                   <div class="form-group">
-                    <label>instruction</label>
+                    <label>Associate Users</label>
                     <br>
                     <?php  
                     require_once 'config.php';
@@ -319,7 +277,7 @@ echo sizeof($checkbox);
     </section>
 
     <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
+      <p></p>
     </footer>
       <script>
      CKEDITOR.replace( 'editor1' );

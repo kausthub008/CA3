@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Dashboard</title>
+    <title>Admin Area | MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -24,7 +24,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -44,7 +44,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-10">
-            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard <small>Manage Your Site</small></h1>
+            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard <small></small></h1>
           </div>
           <div class="col-md-2">
             <div class="dropdown create">
@@ -64,13 +64,7 @@
       </div>
     </header>
 
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">Dashboard</li>
-        </ol>
-      </div>
-    </section>
+
 
     <section id="main">
       <div class="container">
@@ -80,20 +74,18 @@
            <?php
         require_once 'config.php';
          $id = $_GET['taskid'];
-        //echo "id = $id";
+        
         if(isset($id) && !empty($id)){
-                  //echo "ff";
+                
                   require_once 'config.php';
                   $abc = "SELECT taskid,tname,tinstruction,tlink FROM task WHERE taskid = $id";
-        //print "query1 = $abc";
+      
         $pat = $pdo->query($abc);
         $row1 = $pat->fetch();
         } else{
     // Check existence of id parameter
     if(empty(trim($_GET["taskid"]))){
-        // URL doesn't contain id parameter. Redirect to error page
-        //header("location: error.php");
-      //echo "rpg";
+        
         exit();
     }
 }
@@ -128,10 +120,6 @@
         </div>
       </div>
     </section>
-
-    <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
    
   <script>
      CKEDITOR.replace( 'editor1' );

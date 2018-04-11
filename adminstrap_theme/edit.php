@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Edit Page</title>
+    <title> Edit Page</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -25,13 +25,13 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="index.html">MU Research Dashboard</a></li>
             <li><a href="pages.html">Pages</a></li>
             <li><a href="posts.html">Posts</a></li>
             <li><a href="users.html">Users</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Brad</a></li>
+            <li><a href="#">Welcome</a></li>
             <li><a href="login.html">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->

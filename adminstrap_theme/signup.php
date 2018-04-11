@@ -20,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $username = $input_name;
     }
     
-    // Validate address
+    // Validate password
     $input_pass = trim($_POST["password"]);
     if(empty($input_pass)){
         $password_err = 'Please enter an password.';     
@@ -28,6 +28,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $password = $input_pass;
     }
   
+	  // Validate email
      $input_email = $_POST["email"];
       if (!filter_var($input_email, FILTER_VALIDATE_EMAIL)) {
        
@@ -36,7 +37,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
          
       $email = $input_email;
       }
-  
+    
+	  //validate phone number
   $input_ph = trim($_POST["ph"]);
     if(!is_numeric($input_ph)){
       
@@ -46,7 +48,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $ph = $input_ph;
     }
       
-    // Check input errors before inserting in database
+    // Check if all the fields are error free  
     if(empty($username_err) && empty($password_err) && empty($email_err) && empty($ph_err) ){
         
         // Prepare an insert statement
@@ -70,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
-              echo "jhg";
+             
                 // Records created successfully. Redirect to landing page
                 header("location: login.php");
                 exit();
@@ -109,7 +111,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"> Admin Area <small>Account Registration</small></h1>
+            <h1 class="text-center"> MU Research Dashboard <small>Account Registration</small></h1>
           </div>
         </div>
       </div>
@@ -142,12 +144,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   </div>
                   <button type="submit" class="btn btn-default btn-block">Register</button>
                   <a href="login.php" class="btn btn-default btn-block">cancel</a>
+							    
               </form>
           </div>
         </div>
       </div>
     </section>
-
+          <script>
+     CKEDITOR.replace( 'editor1' );
+ </script>
 
 
     <!-- Bootstrap core JavaScript
