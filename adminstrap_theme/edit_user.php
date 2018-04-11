@@ -264,25 +264,25 @@ if(isset($_POST["userid"]) && !empty($_POST["userid"])){
               <div class="panel-body">
                 <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
                   <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
-                    <label>name</label>
+                    <label>Name</label>
                     <input type="text" name="name" class="form-control"  placeholder="name" value="<?php echo $name; ?>">
                     <span class="help-block"><?php echo $name_err;?></span>
                   </div>
                   <div class="form-group <?php echo (!empty($gender_err)) ? 'has-error' : ''; ?>">
-                    <label>gender</label>
-                    <select name="gender">
-                    <option value="m">male</option>
-                    <option value="f">female</option>
-                    <option value="na">not specified</option>
+                    <label>Gender</label>
+                    <select class="form-control" name="gender" value="<?php echo $gender; ?>">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="NA">NA</option>
                     </select>
                   </div>
                    <div class="form-group <?php echo (!empty($age_err)) ? 'has-error' : ''; ?>">
-                    <label>age</label>
+                    <label>Age</label>
                     <input type="text" name="age" class="form-control" placeholder="Add Some Tags..." value="<?php echo $age; ?>">
                      <span class="help-block"><?php echo $age_err;?></span>
                   </div>
                   <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                    <label>email</label>
+                    <label>Email</label>
                     <input type="text" name="email"class="form-control" placeholder="Add Meta Description..." value="<?php echo $email; ?>">
                     <span class="help-block"><?php echo $email_err;?></span>
                   </div>

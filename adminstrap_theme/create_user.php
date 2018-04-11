@@ -206,25 +206,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                  <br>
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                   <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
-                    <label>name</label>
+                    <label>Name</label>
                     <input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
                     <span class="help-block"><?php echo $name_err;?></span>
                   </div>
                   <div class="form-group <?php echo (!empty($gender_err)) ? 'has-error' : ''; ?>">
-                    <label>gender</label>
-                    <select name="gender">
-                    <option value="m">male</option>
-                    <option value="f">female</option>
-                    <option value="na">not specified</option>
+                    <label>Gender</label>
+                    <select class="form-control" name="gender" value="<?php echo $gender; ?>">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="NA">NA</option>
                     </select>
                   </div>
                    <div class="form-group <?php echo (!empty($age_err)) ? 'has-error' : ''; ?>">
-                    <label>age</label>
+                    <label>Age</label>
                     <input type="text" name="age" class="form-control" value="<?php echo $age; ?>">
                      <span class="help-block"><?php echo $age_err;?></span>
                   </div>
                   <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                    <label>email</label>
+                    <label>Email</label>
                     <input type="text" name="email"class="form-control" value="<?php echo $email; ?>">
                     <span class="help-block"><?php echo $email_err;?></span>
                   </div>

@@ -123,10 +123,10 @@
                            // echo "<table class='table table-striped table-hover'>";
                                 echo "<thead>";
                                     echo "<tr>";
-                                        echo "<th>name</th>";
-                                        echo "<th>gender</th>";
-                                        echo "<th>age</th>";
-                                        echo "<th>email</th>";
+                                        echo "<th>Name</th>";
+                                        echo "<th>Gender</th>";
+                                        echo "<th>Age</th>";
+                                        echo "<th>Email</th>";
                                         echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
