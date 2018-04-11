@@ -165,7 +165,7 @@ if(isset($_POST["userid"]) && !empty($_POST["userid"])){
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="alert alert-danger fade in" style = "background: #ffffff;">
                             <input type="hidden" name="userid" value="<?php echo trim($_GET["userid"]); ?>"/>
-                            <p style = "color: #000000";>Are you sure you want to delete this record?</p><br>
+                            <p style = "color: #000000";>Are you sure you want to delete this user?</p><br>
                             <p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
                               <!-- Once No or Yes is pressed the functionaity moves to index page -->

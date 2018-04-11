@@ -21,7 +21,7 @@ if(isset($_POST["taskid"]) && !empty($_POST["taskid"])){
     if($stmt = $pdo->prepare($sql)){
         // Bind variables to the prepared statement as parameters
         $stmt->bindParam(':taskid', $param_taskid);
-        echo "dddd";
+        //echo "dddd";
         // Set parameters
         $param_taskid = trim($_POST["taskid"]);
         
@@ -136,27 +136,12 @@ if(isset($_POST["taskid"]) && !empty($_POST["taskid"])){
               <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
             </div>
-
-            <div class="well">
-              <h4>Disk Space Used</h4>
-              <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                      60%
-              </div>
-            </div>
-            <h4>Bandwidth Used </h4>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                    40%
-            </div>
-          </div>
-            </div>
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">delete user</h3>
+                <h3 class="panel-title">delete Task</h3>
               </div>
               <div class="panel-body">
                 <div class="row">
@@ -164,7 +149,7 @@ if(isset($_POST["taskid"]) && !empty($_POST["taskid"])){
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="alert alert-danger fade in" style = "background: #ffffff;">
                             <input type="hidden" name="taskid" value="<?php echo trim($_GET["taskid"]); ?>"/>
-                            <p style = "color: #000000";>Are you sure you want to delete this record?</p><br>
+                            <p style = "color: #000000";>Are you sure you want to delete this Task?</p><br>
                             <p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
                               <!-- Once No or Yes is pressed the functionaity moves to index page -->
