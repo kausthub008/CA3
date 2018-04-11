@@ -1,10 +1,13 @@
+<?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <title>Admin Area | MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +37,8 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -73,61 +77,76 @@
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
               </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
+
 
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Available Tasks</h3>
+                <h3 class="panel-title">Associated Experiments</h3>
               </div>
               <div class="panel-body">
                  <br>
-               <!-- <div class="container">-->
-                <!-- <table class="table table-bordered"> -->
-                 <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover">
                        <?php
                      // Include config file
                     require_once 'config.php';
-                    
+                    $id = $_GET["studyid"];
                     // Attempt select query execution
-                    $sql = "SELECT taskid,tname,tinstruction,tlink FROM task";
+                    //$sql = "SELECT taskid,tname,tinstruction,tlink FROM task";
+                  $sql = "select a.expid as expid,a.expname as expname from experiment a,studyexp b where b.studyid ='". $id ."' and b.expid = a.expid";
+                  
                   // Check if the query was executed
                     if($result = $pdo->query($sql)){
                       //check if there were an records in the table
                         if($result->rowCount() > 0){
                            // echo "<table class='table table-striped table-hover'>";
-                          //echo "<table border='1'>";
                                 echo "<thead>";
                                     echo "<tr>";
-                                        echo "<th>Taskid</th>";
-                                        echo "<th>Taskname</th>";
+                                        echo "<th>expid</th>";
+                                        echo "<th>expname</th>";
+                                        echo "<th>taskid's</th>";
                                         echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
                           //Fetch it untill the records are present in the table
                                 while($row = $result->fetch()){
                                     echo "<tr>";
-                                        echo "<td>" . $row['taskid'] . "</td>";
-                                        echo "<td>" . $row['tname'] . "</td>";
+                                   $asd= $row['expid'];
+                                        echo "<td>" . $row['expid'] . "</td>";
+                                        echo "<td>" . $row['expname'] . "</td>";
+                                         $id = $row['expid'];
+                                        $sql1 ="SELECT b.taskid as TaskID,b.tname as TaskName FROM taskexp a,task b where a.expid = '". $id ."' and a.taskid=b.taskid";
+                                        if($result1 = $pdo->query($sql1)){
+                                        $ab = "";
+                                           while($row1 = $result1->fetch()){
+                                             
+                                                 $ab = $ab . $row1['TaskID'] ."  ";
+                                                 
+                                           }
+                                          echo "<td>" . $ab . "</td>";
+                                        }
+                                    
                                         echo "<td>";
-                                  //display read, update and elete records
-                                            echo "<a class='btn btn-default' href='edit_task.php?taskid=". $row['taskid'] ."'>Edit</a>";
-                                            echo "<a class='btn btn-danger' href='delete_task.php?taskid=". $row['taskid'] ."'>Delete</a>";
-                                            echo "<a class='btn btn-default' href='readtask.php?taskid=". $row['taskid'] ."'>Details</a>";
-                                            //echo "<button class='btn btn-primary' name='abc' data-target='#addtask' data-toggle='modal' value = ". $row['taskid'] .">Visualizar</button>";            
+                                  //display eit and delete options
+                                            echo "<a class='btn btn-default' href='edit_exp.php?expid=". $row['expid'] ."'>edit</a>";
+                                            echo "<a class='btn btn-danger' href='delete_exp.php?expid=". $row['expid'] ."'>delete</a>";
+                                            
                                             echo "</td>";
                                     echo "</tr>";
                                 }
-                                echo "</tbody>";                            
+                                echo "</tbody>"; 
+                          
                             echo "</table>";
+                           echo "<a class='btn btn-danger' href='study.php'>Back</a>";
                             // Free result set
                             unset($result);
                         } else{
@@ -141,7 +160,6 @@
                     unset($pdo); 
              ?>
                  </table>
-               
               </div>
               </div>
 
@@ -150,10 +168,7 @@
       </div>
     </section>
 
-   <!-- <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer> -->
-      <script>
+ <script>
      CKEDITOR.replace( 'editor1' );
  </script>
     <!-- Bootstrap core JavaScript

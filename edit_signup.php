@@ -1,4 +1,7 @@
-
+<?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
 <?php
 // Include config file
 require_once 'config.php';
@@ -8,18 +11,8 @@ $username = $password = $email = $ph = $error = "";
 $username_err = $password_err = $email_err = $ph_err = "";
  
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-  
-    // Validate name
-    $input_name = trim($_POST["username"]);
-    if(empty($input_name)){
-        $username_err = "Please enter a name.";
-    } elseif(!filter_var(trim($_POST["username"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
-        $username_err = 'Please enter a valid name.';
-    } else{
-        $username = $input_name;
-    }
-    
+if(isset($_SESSION['login_user']) && !empty($_SESSION['login_user'])){
+     
     // Validate password
     $input_pass = trim($_POST["password"]);
     if(empty($input_pass)){
@@ -30,7 +23,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   
 	  // Validate email
      $input_email = $_POST["email"];
-      if (!filter_var($input_email, FILTER_VALIDATE_EMAIL)) {
+	    if(empty($input_email)){
+				$email_err = "Please enter email";
+			}elseif (!filter_var($input_email, FILTER_VALIDATE_EMAIL)) {
        
       $email_err = "Invalid email format"; 
       } else{
@@ -40,7 +35,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
 	  //validate phone number
   $input_ph = trim($_POST["ph"]);
-    if(!is_numeric($input_ph)){
+	if(empty($input_ph)){
+				$ph_err = "Please enter phone number";
+			}elseif(!is_numeric($input_ph)){
       
         $ph_err = 'Please enter phone number';     
     } else{
@@ -49,15 +46,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
       
     // Check if all the fields are error free  
-    if(empty($username_err) && empty($password_err) && empty($email_err) && empty($ph_err) ){
+    if(empty($password_err) && empty($email_err) && empty($ph_err) ){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO webusers (username, password, email, ph) VALUES (:username, :password, :email, :ph)";
+        $sql = "UPDATE webusers set password=:password, email=:email, ph=:ph where username = '". $_SESSION['login_user'] ."'";
+			 print "query = $sql";
  
         if($stmt = $pdo->prepare($sql)){
           
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':username', $param_username);
+           
             $stmt->bindParam(':password', $param_password);
             $stmt->bindParam(':email', $param_email);
             $stmt->bindParam(':ph', $param_ph);
@@ -106,12 +104,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <script src="http://cdn.ckeditor.com/4.6.1/standard/ckeditor.js"></script>
   </head>
   <body>
-
+<style>
+        label {
+            color: white;
+        }
+        
+        body {
+            background: url(https://www.sevenforums.com/attachments/general-discussion/250721d1486599828t-any-ideas-how-my-login-background-screen-changed-its-own-backgrounddefault.jpg);
+            background-size: cover;
+            width: 100vw;
+        }
+		</style>
     <header id="header">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center"> MU Research Dashboard <small>Account Registration</small></h1>
+            <h1 class="text-center"> MU Research Dashboard <small>Edit Profile </small></h1>
           </div>
         </div>
       </div>
@@ -124,7 +132,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                   <div class="form-group">
                     <label>Username</label>
-                    <input type="text" name = "username" class="form-control" placeholder="Enter username">
+                    <input type="text" name = "username" class="form-control" value="<?php echo $_SESSION['login_user'];?>" readonly></input>
                     <span class="help-block"><?php echo $username_err;?></span>
                   </div>
                   <div class="form-group">

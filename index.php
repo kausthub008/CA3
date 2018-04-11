@@ -1,10 +1,15 @@
+<?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | MU Research Dashboard</title>
+    <title>MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -33,7 +38,8 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+           <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -72,54 +78,47 @@
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
               </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
 
+            
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Study details</h3>
+                <h3 class="panel-title">Website Overview</h3>
               </div>
               <div class="panel-body">
-                <?php
-                  $id = $_GET['studyid'];
-                  if(isset($id) && !empty($id)){
-                  echo "ff";
-                  require_once 'config.php';
-                  $sql ="SELECT b.expid as expID,b.expname as expName FROM studyexp a,experiment b where a.studyid = '". $id ."' and a.expid=b.expid";
-                  echo "<table border='1'>
-                  <tr>
-                  <th>expID</th>
-                  <th>expName</th>
-                  </tr>";
-                 if($result = $pdo->query($sql)){
-                 echo"dd";
-                  while($row = $result->fetch())
-                  {
-                      echo "<tr>";
-                      echo "<td>" . $row['expID'] . "</td>";
-                      echo "<td>" . $row['expName'] . "</td>";
-                      echo "</tr>";
-                   }
-                    }                  
-                    echo "</table>";
-                }else{
-    // Check existence of id parameter
-    if(empty(trim($_GET["expid"]))){
-        // URL doesn't contain id parameter. Redirect to error page
-        header("location: error.php");
-        exit();
-    }
-}
- echo "<a class='btn btn-danger' href='Study.php'>delete</a>";
-?>
+                <div class="col-md-3">
+                  <div class="well dash-box">
+                    <h2><span class="glyphicon glyphicon-user" aria-hidden="true"></span></h2>
+                    <h4><a href="users.php">Users</a></h4>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="well dash-box">
+                    <h2><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></h2>
+                    <h4><a href="Task.php">Tasks</a></h4>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="well dash-box">
+                    <h2><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></h2>
+                    <h4><a href="Study.php">Study</a></h4>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="well dash-box">
+                    <h2><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></h2>
+                    <h4><a href="Experiment.php">Experiment</a></h4>
+                  </div>
+                </div>
               </div>
               </div>
           </div>
@@ -127,9 +126,7 @@
       </div>
     </section>
 
-    <footer id="footer">
-      <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>
+    
    
   <script>
      CKEDITOR.replace( 'editor1' );

@@ -1,7 +1,7 @@
 <?php
 // Include config file
 require_once 'config.php';
- 
+session_start(); 
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_err = $password_err = "";
@@ -47,7 +47,17 @@ unset($pdo);
     <script src="http://cdn.ckeditor.com/4.6.1/standard/ckeditor.js"></script>
   </head>
   <body>
-
+<style>
+        label {
+            color: white;
+        }
+        
+        body {
+            background: url(https://www.sevenforums.com/attachments/general-discussion/250721d1486599828t-any-ideas-how-my-login-background-screen-changed-its-own-backgrounddefault.jpg);
+            background-size: cover;
+            width: 100vw;
+        }
+		</style>
     <header id="header">
       <div class="container">
         <div class="row">

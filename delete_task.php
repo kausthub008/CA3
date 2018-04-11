@@ -1,53 +1,43 @@
 <?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+<?php
+
+$error = " ";
 // Process delete operation after confirmation
-if(isset($_POST["expid"]) && !empty($_POST["expid"])){
+if(isset($_POST["taskid"]) && !empty($_POST["taskid"])){
     // Include config file
     require_once 'config.php';
-  $id = $_POST["expid"];
-    // Prepare a delete sstatement
-    $sql = "DELETE FROM experiment WHERE expid = $id";
-    $sqla = "DELETE FROM taskexp where expid = $id";
-    $sqlb = "DELETE from orderuser where orderid in (select orderid from orderexp where expid = $id)";
-    $sqlc = "DELETE from ordertask where orderid in (select orderid from orderexp where expid = $id)";
-    $sqld = "DELETE FROM orderexp where expid = $id";
-    $sqle = "DELETE FROM studyexp where expid = $id";
-    
-    //prepare the delete statements    
+  $id = $_POST["taskid"];
+    // Prepare a select statement
+    $sql = "DELETE FROM task WHERE taskid = :taskid";
+  $sqla = "select * from taskexp where taskid = $id";
+  $sqlb = "DELETE FROM task WHERE taskid = $id";
+   $del = $pdo->prepare($sqla);
+    $del->execute();
+    $count = $del->rowCount();
+      if($count > 0)
+      {
+        $error = 'You cannot delete this task since he is associated with an experiemnt ';
+      }
+    else{
     if($stmt = $pdo->prepare($sql)){
-      if($stmta = $pdo->prepare($sqla)){
-        if($stmtb = $pdo->prepare($sqlb)){
-          if($stmtc = $pdo->prepare($sqlc)){
-            if($stmtd = $pdo->prepare($sqld)){
-              if($stmte = $pdo->prepare($sqle)){
-      
-       
+        // Bind variables to the prepared statement as parameters
+        $stmt->bindParam(':taskid', $param_taskid);
+        //echo "dddd";
+        // Set parameters
+        $param_taskid = trim($_POST["taskid"]);
+        
         // Attempt to execute the prepared statement
         if($stmt->execute()){
-          if($stmta->execute()){
-            if($stmtb->execute()){
-              if($stmtc->execute()){
-                if($stmtd->execute()){
-                  if($stmte->execute()){
-                
-             
-               // Records deleted successfully. Redirect to landing page
-               header("location: Experiment.php");
-               //this command is used to exit from the loop 
-               exit();
-                }
-            }
-          }
-             } 
-           }
-         }else{
+            // Records deleted successfully. Redirect to landing page
+            header("location: Task.php");
+          //this command is used to exit from the loop 
+            exit();
+        } else{
             echo "Oops! Something went wrong. Please try again later.";
         }
-            }
-        }
-      }
-       }
-      }
-  
     }
      
     // Close statement
@@ -55,9 +45,10 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
     
     // Close connection
     unset($pdo);
-} else{
+}
+}else{
     // Check existence of id parameter
-    if(empty(trim($_GET["expid"]))){
+    if(empty(trim($_GET["taskid"]))){
         // URL doesn't contain id parameter. Redirect to error page
         header("location: error.php");
         exit();
@@ -70,7 +61,7 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MU Research Dashboard</title>
+    <title> Admin Area | MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -90,13 +81,15 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
             <li><a href="Experiment.php">Experiment</a></li>
             <li><a href="Study.php">Study</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-           <li><a>Welcome</a></li>
+           <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -107,7 +100,7 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
       <div class="container">
         <div class="row">
           <div class="col-md-10">
-            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span><small></small></h1>
+            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard<small></small></h1>
           </div>
           <div class="col-md-2">
             <div class="dropdown create">
@@ -116,10 +109,11 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                
                 <li><a type="button" href="create_user.php">Add user</a></li>
                 <li><a type="button" href="create_task.php">Add Task</a></li>
                 <li><a type="button" href="create_exp.php">Add Experiment</a></li>
-                <li><a type="button" href="create_study.php">Add Study</a></li>
+                 <li><a type="button" href="create_study.php">Add Study</a></li>
               </ul>
             </div>
           </div>
@@ -135,34 +129,32 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.html" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
               </a>
               <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
               <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
               <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
-
-
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Delete Experiment</h3>
+                <h3 class="panel-title">Delete Task</h3>
               </div>
               <div class="panel-body">
                 <div class="row">
                       <div class="col-md-12">
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="alert alert-danger fade in" style = "background: #ffffff;">
-                            <input type="hidden" name="expid" value="<?php echo trim($_GET["expid"]); ?>"/>
-                            
-                            <p style = "color: #000000";>Are you sure you want to delete this experiment?</p><br>
+                            <input type="hidden" name="taskid" value="<?php echo trim($_GET["taskid"]); ?>"/>
+                            <p style = "color: #000000";>Are you sure you want to delete this Task?</p><br>
                             <p>
                                 <input type="submit" value="Yes" class="btn btn-danger">
                               <!-- Once No or Yes is pressed the functionaity moves to index page -->
-                                <a href="Experiment.php" class="btn btn-default">No</a>
+                                <a href="Task.php" class="btn btn-default">No</a>
+                              <span class="help-block"><?php echo $error;?></span>
                             </p>
                         </div>
                     </form>
@@ -178,9 +170,7 @@ if(isset($_POST["expid"]) && !empty($_POST["expid"])){
       </div>
     </section>
 
-    <footer id="footer">
-      <p></p>
-    </footer>
+
   <script>
      CKEDITOR.replace( 'editor1' );
  </script>

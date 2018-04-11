@@ -1,3 +1,7 @@
+<?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -33,8 +37,9 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Prajeth</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
+            <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -69,57 +74,67 @@
     <section id="main">
       <div class="container">
         <div class="row">
-             <!-- Add Task -->
+          <div class="col-md-3">
+            <div class="list-group">
+              <a href="index.php" class="list-group-item active main-color-bg">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
+              </a>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
+            </div>
 
-           <?php
-        require_once 'config.php';
-         $id = $_GET['taskid'];
-        
-        if(isset($id) && !empty($id)){
-                
+          </div>
+          <div class="col-md-9">
+            <!-- Website Overview -->
+            <div class="panel panel-default">
+              <div class="panel-heading main-color-bg">
+                <h3 class="panel-title">Study details</h3>
+              </div>
+              <div class="panel-body">
+                <?php
+                  $id = $_GET['studyid'];
+                  if(isset($id) && !empty($id)){
+                  echo "ff";
                   require_once 'config.php';
-                  $abc = "SELECT taskid,tname,tinstruction,tlink FROM task WHERE taskid = $id";
-      
-        $pat = $pdo->query($abc);
-        $row1 = $pat->fetch();
-        } else{
+                  $sql ="SELECT b.expid as expID,b.expname as expName FROM studyexp a,experiment b where a.studyid = '". $id ."' and a.expid=b.expid";
+                  echo "<table border='1'>
+                  <tr>
+                  <th>expID</th>
+                  <th>expName</th>
+                  </tr>";
+                 if($result = $pdo->query($sql)){
+                 echo"dd";
+                  while($row = $result->fetch())
+                  {
+                      echo "<tr>";
+                      echo "<td>" . $row['expID'] . "</td>";
+                      echo "<td>" . $row['expName'] . "</td>";
+                      echo "</tr>";
+                   }
+                    }                  
+                    echo "</table>";
+                }else{
     // Check existence of id parameter
-    if(empty(trim($_GET["taskid"]))){
-        
+    if(empty(trim($_GET["expid"]))){
+        // URL doesn't contain id parameter. Redirect to error page
+        header("location: error.php");
         exit();
     }
 }
-        
-        ?>
-      <form>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Task ID</label>
-          <input type="text" class="form-control" value="<?php echo $row1[taskid]; ?>" readonly></a>
-        </div>
-        <div class="form-group">
-          <label>Task Name</label>
-          <input type="text" class="form-control" value="<?php echo $row1[tname]; ?>" readonly>
-        </div>
-      
-        <div class="form-group">
-          <label>Task instruction</label>
-          <input type="text" class="form-control" value="<?php echo $row1[tinstruction]; ?>" readonly>
-        </div>
-        <div class="form-group">
-          <label>Task link</label>
-          <input type="text" class="form-control" href = "<?php echo $row1[tlink]; ?>" value = "<?php echo $row1[tlink]; ?>"  readonly>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <a type="button" href="Task.php" class="btn btn-primary" >Back</a>
-      </div>
-    </form>
-  
-          </div> 
+ echo "<a class='btn btn-danger' href='Study.php'>delete</a>";
+?>
+              </div>
+              </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <footer id="footer">
+      <p>Copyright AdminStrap, &copy; 2017</p>
+    </footer>
    
   <script>
      CKEDITOR.replace( 'editor1' );

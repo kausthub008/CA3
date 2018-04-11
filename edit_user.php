@@ -1,124 +1,138 @@
 <?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+<?php
 // Include config file
-include ('config.php');
+require_once 'config.php';
  
 // Define variables and initialize with empty values
-$expid = $expname = $taskid = $tname = $tinstruction = $tlink = "";
-$expid_err = $expname_err = $taskid_err = $tname_err = $tinstruction_err = $tlink_err = "";
-$error = "";
+$name = $gender = $age = $email = "";
+$name_err = $gender_err = $age_err = $email_err = "";
  
 // Processing form data when form is submitted
-if(isset($_POST["expid"]) && !empty($_POST["expid"])){
-  
+if(isset($_POST["userid"]) && !empty($_POST["userid"])){
     // Get hidden input value
-    $expid = $_POST["expid"];
+    $userid = $_POST["userid"];
      // Validate name
-     $input_ename = trim($_POST["expname"]);
+    $input_name = trim($_POST["name"]);
   //check if the field is empty
-    if(empty($input_ename)){
-        $expname_err = "Please enter a name.";
+  
+    if(empty($input_name)){
+        $name_err = "Please enter a name.";
       //Validate if there are any special characters
-    } elseif(!filter_var(trim($_POST["expname"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
-        $expname_err = 'Please enter a valid name.';
+    } elseif(!filter_var(trim($_POST["name"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
+        $name_err = 'Please enter a valid name.';
     } else{
-        $expname = $input_ename;
+        $name = $input_name;
     }
-  
-//values of check boxes are put into the variable
-$checkbox = $_POST['tname']; 
-$checkboxm = $_POST['name'];  
-
-  
-
+    
+    // Validate address address
+    $input_gender = trim($_POST["gender"]);
+  //check if the field is empty
+    if(empty($input_gender)){
+        $gender_err = 'Please enter an gender.';     
+    } 
+    else{
+        $gender = $input_gender;
+    }
+    
+    // Validate salary
+    $input_age = trim($_POST["age"]);
+  //check if the field is empty
+    if(empty($input_age)){
+        $age_err = "Please enter the age.";
+      //check if the entered value is a positive digit
+    } elseif(!ctype_digit($input_age)){
+        $age_err = 'Please enter a positive integer value.';
+    } 
+    elseif($input_age >'120'){
+     
+    $age_err = 'please enter valid age';
+  }else{
+        $age = $input_age;
+    }
+    
+   //Validate Taxpaid
+   $input_email = trim($_POST["email"]);
+  //check if the field is empty
+    if(empty($input_email)){
+        $email_err = "Please enter email."; 
+      //check if the entered value is a positive digit
+    }else{
+        $email = $input_email;
+    }
+   echo $name_err;
+  echo $age_err;
+  echo $gender_err;
+  echo $email_err;
       // Check input errors before inserting in database
-    if(empty($expname_err)){
+    if(empty($name_err) && empty($age_err) && empty($gender_err) && empty($email_err)){
         // Prepare an insert statement
       
-        $sql = "UPDATE experiment SET expname=:expname WHERE expid=$expid";
-        $sqla = "delete from taskexp where expid=$expid";
-        
-        //prepare sql statements
-      
+        $sql = "UPDATE users SET name=:name, gender=:gender, age=:age, email=:email WHERE userid=:userid";
+ 
         if($stmt = $pdo->prepare($sql)){
-          if($stmta = $pdo->prepare($sqla)){
+            // Bind variables to the prepared statement as parameters
+            $stmt->bindParam(':name', $param_name);
+            $stmt->bindParam(':gender', $param_gender);
+            $stmt->bindParam(':age', $param_age);
+            $stmt->bindParam(':email', $param_email);
+            $stmt->bindParam(':userid', $param_userid);
             
-          
-             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':expname', $param_ename);
-                       
             // Set parameters
-            $param_ename = $expname;
-      
+            $param_name = $name;
+            $param_gender = $gender;
+            $param_age = $age;
+            $param_email = $email;
+            $param_userid = $userid;
+            
             // Attempt to execute the prepared statement
             if($stmt->execute()){
-              
                 // Records updated successfully. Redirect to landing page
-              if($stmta->execute()){
-                 
-                //insert into association table 
-                for ($i=0; $i<sizeof($checkbox); $i++)
-                   {
-             
-                      $query1="INSERT INTO taskexp (expid,taskid) VALUES ($expid,$checkbox[$i])";  
-                      
-                     if($stmtb = $pdo->prepare($query1)){
-                       
-                     if($stmtb->execute()){
-                     
-                        
-                         } else{
-                        echo "Something went wrong. Please try again later.";
-                             }
-                    }
-                        else{echo "some error";}
-                         
-                   }
-                header("location: Experiment.php?studyid=$ids");
+                header("location: users.php");
               //this command is used to exit from the  if statement
                 exit();
-              
-              }
             } else{
                 echo "Something went wrong. Please try again later.";
             }
-          
-         }
         }
+         
         // Close statement
         unset($stmt);
     }
     
-
+    // Close connection
+    unset($pdo);
 } else{
     // Check existence of id parameter before processing further
-    if(isset($_GET["expid"]) && !empty(trim($_GET["expid"]))){
-      
+    if(isset($_GET["userid"]) && !empty(trim($_GET["userid"]))){
         // Get URL parameter
-        $expid =  trim($_GET["expid"]);
+        $userid =  trim($_GET["userid"]);
         
         // Prepare a select statement
-        $sql = "SELECT * FROM experiment WHERE expid = :expid";
+        $sql = "SELECT * FROM users WHERE userid = :userid";
         if($stmt = $pdo->prepare($sql)){
-          
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':expid', $param_expid);
+            $stmt->bindParam(':userid', $param_userid);
             
             // Set parameters
-            $param_expid = $expid;
+            $param_userid = $userid;
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 if($stmt->rowCount() == 1){
-                  
                     /* Fetch result row as an associative array. Since the result set
                     contains only one row, we don't need to use while loop */
                     $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                     // Retrieve individual field value
-                    $expname = $row["expname"];
-                                    
+                    $name = $row["name"];
+                    $gender = $row["gender"];
+                    $age = $row["age"];
+                    $email = $row["email"];
+                  
                 } else{
-                    
                     // URL doesn't contain valid id. Redirect to error page
                     header("location: error.php");
                     exit();
@@ -132,14 +146,16 @@ $checkboxm = $_POST['name'];
         // Close statement
         unset($stmt);
         
+        // Close connection
+        unset($pdo);
     }  else{
-      
         // URL doesn't contain id parameter. Redirect to error page
         header("location: error.php");
         exit();
     }
-} 
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -175,7 +191,8 @@ $checkboxm = $_POST['name'];
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -206,79 +223,56 @@ $checkboxm = $_POST['name'];
       </div>
     </header>
 
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">MU Research Dashboard</li>
-        </ol>
-      </div>
-    </section>
-
     <section id="main">
       <div class="container">
         <div class="row">
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
               </a>
               <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
               <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
               <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
+
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Edit Experiment</h3>
+                <h3 class="panel-title">Edit the User</h3>
               </div>
               <div class="panel-body">
                 <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
-
-                  <div class="form-group">
-                    <p>
-                    <label>Experiment Name</label>
-                    <input type="text" name="expname" class="form-control" value="<?php echo $expname; ?>">
-                    <span class="help-block"><?php echo $expname_err;?></span>
-                    </p>
+                  <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
+                    <label>Name</label>
+                    <input type="text" name="name" class="form-control"  placeholder="name" value="<?php echo $name; ?>">
+                    <span class="help-block"><?php echo $name_err;?></span>
                   </div>
-                   <div class="form-group">
-                    <label>Associated Tasks</label>
-                    <br>
-                    <?php  
-                    
-                    require_once 'config.php';
-                     $id = $_GET["expid"];
-                   $ids = $_GET["studyid"];
-                      //select and display all the tasks that are available 
-                    $sql1 = "SELECT taskid,tname FROM task";
-                    if($tname = $pdo->query($sql1)){
-                      //Display all the task id's and its name in the form of checkbox
-                        while ($row = $tname->fetch())
-                        {                            
-                            echo "<tr><td>";
-                            echo "<input type='checkbox' name='tname[]' value = ";
-                            echo $row['taskid'];
-                            echo " />";
-                            echo $row['taskid'];
-                            echo "          ";
-                            echo $row['tname'];
-                            echo "</td></tr><br/>";
-                        }
-                    }
-                     ?>
-                     <span class="help-block"><?php echo $error;?></span>
+                  <div class="form-group <?php echo (!empty($gender_err)) ? 'has-error' : ''; ?>">
+                    <label>Gender</label>
+                    <select class="form-control" name="gender" value="<?php echo $gender; ?>">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="NA">NA</option>
+                    </select>
                   </div>
-                  
-                  <input type="hidden" name="expid" value="<?php echo $id; ?>"/>
-                  <input type="hidden" name="studyid" value="<?php echo $ids; ?>"/> 
-                  <br>
+                   <div class="form-group <?php echo (!empty($age_err)) ? 'has-error' : ''; ?>">
+                    <label>Age</label>
+                    <input type="text" name="age" class="form-control" placeholder="Add Some Tags..." value="<?php echo $age; ?>">
+                     <span class="help-block"><?php echo $age_err;?></span>
+                  </div>
+                  <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+                    <label>Email</label>
+                    <input type="text" name="email"class="form-control" placeholder="Add Meta Description..." value="<?php echo $email; ?>">
+                    <span class="help-block"><?php echo $email_err;?></span>
+                  </div>
+                  <input type="hidden" name="userid" value="<?php echo $userid; ?>"/>
                   <input type="submit" class="btn btn-danger" value="Submit">
-                  <a href="Experiment.php" class="btn btn-default">Cancel</a>
+                  <a href="users.php" class="btn btn-default">Cancel</a>
                 </form> 
-              
               </div>
               </div>
           </div>
@@ -286,7 +280,9 @@ $checkboxm = $_POST['name'];
       </div>  
     </section>
 
-
+   <!-- <footer id="footer">
+      <p>Copyright AdminStrap, &copy; 2017</p>
+    </footer> -->
   <script>
      CKEDITOR.replace( 'editor1' );
  </script>

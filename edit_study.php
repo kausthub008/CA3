@@ -1,4 +1,8 @@
 <?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+<?php
 // Include config file
 include ('config.php');
  
@@ -184,7 +188,8 @@ if(isset($_POST["studyid"]) && !empty($_POST["studyid"])){
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -215,14 +220,6 @@ if(isset($_POST["studyid"]) && !empty($_POST["studyid"])){
       </div>
     </header>
 
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">MU Research Dashboard</li>
-        </ol>
-      </div>
-    </section>
-
     <section id="main">
       <div class="container">
         <div class="row">
@@ -242,7 +239,7 @@ if(isset($_POST["studyid"]) && !empty($_POST["studyid"])){
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Website Overview</h3>
+                <h3 class="panel-title">Edit Study</h3>
               </div>
               <div class="panel-body">
                 
@@ -265,7 +262,7 @@ if(isset($_POST["studyid"]) && !empty($_POST["studyid"])){
                 <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
                   <div class="form-group <?php echo (!empty($studyname_err)) ? 'has-error' : ''; ?>">
                   
-                    <label>name</label>
+                    <label>Name</label>
                     <input type="text" name="studyname" class="form-control" value="<?php echo $studyname; ?>">
                     <span class="help-block"><?php echo $studyname_err;?></span>
                   </div>
@@ -285,7 +282,8 @@ if(isset($_POST["studyid"]) && !empty($_POST["studyid"])){
                             echo "<input type='checkbox' name='expname[]' value = ";
                             echo $row['expid'];
                             echo " />";
-                            //echo " />";
+                            echo $row['expid'];
+                            echo "          ";
                             echo $row['expname'];
                             echo "</td></tr><br/>";
                         }

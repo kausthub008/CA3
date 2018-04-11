@@ -1,55 +1,71 @@
 <?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+<?php
 // Include config file
 require_once 'config.php';
  
 // Define variables and initialize with empty values
-$orderid = $taskid = $userid = $oname = "";
-$ordeid_err = $taskid_err = $oname_err = "";
-$row = $row1 = ""; 
+$studyid = $expid = $studyname = "";
+$studyid_err = $expid_err = $studyname_err = "";
+$row = $row1 = "";
+$error = "";
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
      
      // Validate name
-    $input_oname = trim($_POST["oname"]);
+    $input_sname = trim($_POST["studyname"]);
   //check if the field is empty
-    if(empty($input_oname)){
-        $oname_err = "Please enter a name.";
+    if(empty($input_sname)){
+        $studyname_err = "Please enter a study name.";
       //Validate if there are any special characters
-    } elseif(!filter_var(trim($_POST["oname"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
-        $oname_err = 'Please enter a valid name.';
+    } elseif(!filter_var(trim($_POST["studyname"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
+        $studyname_err = 'Please enter a valid study name.';
     } else{
-        
-        $oname = $input_oname;
+        echo "ff";
+        $studyname = $input_sname;
     }
-  $id1 = $_POST['expid'];
-
+ 
+  //Extract the values that are checked in
+  $checkbox = $_POST['expname'];
+  //Make sure one experiment is not part of multiple studies 
+   for ($k=0; $k<sizeof($checkbox); $k++){
+     
+      $abc = "SELECT * FROM studyexp where expid = $checkbox[$k]";
+    
+   $del = $pdo->prepare($abc);
+    $del->execute();
+    $count = $del->rowCount();
+     
+     if($count > 0)
+      {
+        $error = "You cannot add this experiment since it is already used in different study";
+      }
+   }
+ // check for any error in the experiment choosed
+if(empty($error)){
     // Check input errors before inserting in database
-  if(empty($oname_err)){
-    if(isset($id1) && !empty($id1)){
+    if(empty($studyname_err)){
         
         // Prepare an insert statement
       
-         $sql = "INSERT INTO orders (ordername) VALUES (:oname)";
-        
+         $sql = "INSERT INTO study (studyname) VALUES ('$studyname')";
+         print "query1 = $sql"; 
         if($stmt = $pdo->prepare($sql)){
                       // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':oname', $param_oname);
+            $stmt->bindParam(':studyname', $param_sname);
                      
             // Set parameters
-            $param_oname = $oname;
+            $param_sname = $studyname;
            
             // Attempt to execute the prepared statement
             if($stmt->execute()){
-            
-               // Records created successfully. Redirect to data page
-               // header("location: Task.php");
-              //$conn = mysql_connect('localhost', 'kausthub', '1234');
-              $query = "SELECT orderid FROM orders WHERE ordername = '". $oname ."'";
+              //extract the study id that was created
+              $query = "SELECT studyid FROM study WHERE studyname = '". $studyname ."'";
               $result = $pdo->query($query);
               $row1 = $result->fetch();
-             
-              //this command is used to exit from the  if statement 
-                //exit();
+              
             } else{
                 echo "Something went wrong. Please try again later.";
             }
@@ -59,58 +75,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         unset($stmt);
     }
 
-    //collect the checkbox values into variable
-$checkbox = $_POST['tname']; // Displays value of checked checkbox.
-$checkboxa = $_POST['uname'];
-
-//prepare sql 
- $queryo="INSERT INTO orderexp (orderid,expid) VALUES ($row1[0],$id1)";  
-     
- $stmto = $pdo->prepare($queryo);
- if($stmto->execute()){
-   //insert tasks into association table
+   //insert the associated experiments into the table
     for ($i=0; $i<sizeof($checkbox); $i++)
         {
              
-            $query1="INSERT INTO ordertask (orderid,taskid) VALUES ($row1[0],$checkbox[$i])";  
-                 
-        
+            $query1="INSERT INTO studyexp (studyid,expid) VALUES ($row1[0],$checkbox[$i])";  
+           //prepare the query
             if($stmt1 = $pdo->prepare($query1)){
-               
           
+            // Attempt to execute the prepared statement
             if($stmt1->execute()){
-           
-            } else{
-                echo "Something went wrong. Please try again later.";
-            }
-        }
-      else{echo "some error";}
-           
-        }
-   //insert users into association table
-  for ($j=0; $j<sizeof($checkboxa); $j++)
-        {
              
-            $query2="INSERT INTO orderuser (orderid,userid) VALUES ($row1[0],$checkboxa[$j])";  
-           
-            if($stmt2 = $pdo->prepare($query2)){
+                // Records created successfully. Redirect to study page
+                header("location: Study.php");
+             
               
-            if($stmt2->execute()){
-             
             } else{
                 echo "Something went wrong. Please try again later.";
             }
         }
       else{echo "some error";}
-          
+           
         }
-   header("location: Experiment.php");
-  }
 }
     echo "Complete";
 
-    // Close connection
-    unset($pdo);
 }
 ?>
 
@@ -120,7 +109,7 @@ $checkboxa = $_POST['uname'];
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> MU Research Dashboard </title>
+    <title>MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -149,7 +138,8 @@ $checkboxa = $_POST['uname'];
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -180,13 +170,7 @@ $checkboxa = $_POST['uname'];
       </div>
     </header>
 
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">MU Research Dashboard</li>
-        </ol>
-      </div>
-    </section>
+
 
     <section id="main">
       <div class="container">
@@ -194,7 +178,7 @@ $checkboxa = $_POST['uname'];
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
               </a>
               <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
               <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
@@ -208,65 +192,45 @@ $checkboxa = $_POST['uname'];
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Create Order</h3>
+                <h3 class="panel-title">Create Study</h3>
               </div>
               <div class="panel-body">
                  <br>
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                    <div class="form-group <?php echo (!empty($oname_err)) ? 'has-error' : ''; ?>">
-                    <label>Ordername</label>
-                    <input type="text" name="oname" class="form-control" value="<?php echo $oname; ?>">
-                    <span class="help-block"><?php echo $oname_err;?></span>
+                  <div class="form-group <?php echo (!empty($studyname_err)) ? 'has-error' : ''; ?>">
+                    <label>study Name</label>
+                    <input type="text" name="studyname" class="form-control" value="<?php echo $studyname; ?>">
+                    <span class="help-block"><?php echo $studyname_err;?></span>
                   </div>
-                  <div class="form-group">
-                    <label>Associate Tasks</label>
+     
+                  <div class="form-group" <?php echo (!empty($error)) ? 'has-error' : ''; ?>>
+                    <label>Associated experiments</label>
                     <br>
                     <?php  
                     require_once 'config.php';
-                    $id = $_GET["expid"];
-                    $sql = "SELECT a.taskid as taskid,a.tname tname FROM task a,taskexp b where b.expid = '". $id ."' and b.taskid = a.taskid";
-                    print "query = $sql";
-                    if($tname = $pdo->query($sql)){
+                    $sql = "SELECT expid,expname FROM experiment";
+                   // print "query1 = $sql";
+                    if($ename = $pdo->query($sql)){
                       //check if there were an records in the table
-    
-                        while ($row = $tname->fetch())
+                       
+                        while ($row = $ename->fetch())
                         {                            
                             echo "<tr><td>";
-                            echo "<input type='checkbox' name='tname[]' value = ";
-                            echo $row['taskid'];
+                            echo "<input type='checkbox' name='expname[]' value = ";
+                            echo $row['expid'];
                             echo " />";
-                            //echo " />";
-                            echo $row['tname'];
+                            echo $row['expid'];
+                            echo "          ";
+                            echo $row['expname'];
                             echo "</td></tr><br/>";
                         }
                     }
                      ?>
+                    <span class="help-block"><?php echo $error;?></span>
                   </div>
-                  <div class="form-group">
-                    <label>Associate Users</label>
-                    <br>
-                    <?php  
-                    require_once 'config.php';
-                    $sql = "SELECT userid,name FROM users";
-                    if($tname = $pdo->query($sql)){
-                      //check if there were an records in the table
-    
-                        while ($row = $tname->fetch())
-                        {                            
-                            echo "<tr><td>";
-                            echo "<input type='checkbox' name='uname[]' value = ";
-                            echo $row['userid'];
-                            echo " />";
-                            //echo " />";
-                            echo $row['name'];
-                            echo "</td></tr><br/>";
-                        }
-                    }
-                     ?>
-                  </div>
-                  <input type="hidden" name="expid" value="<?php echo $id; ?>"/>
+                    
                   <input type="submit" class="btn btn-default" value="Submit">
-                  <a href="readexp.php" class="btn btn-default">Cancel</a>
+                  <a href="Study.php" class="btn btn-default">Cancel</a>
                 </form> 
              </div>
               </div>
@@ -275,10 +239,6 @@ $checkboxa = $_POST['uname'];
         </div>
       </div>
     </section>
-
-    <footer id="footer">
-      <p></p>
-    </footer>
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>

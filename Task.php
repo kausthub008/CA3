@@ -1,10 +1,15 @@
+<?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Area | Dashboard</title>
+    
+    <title>Admin Area | MU Research Dashboard</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -24,7 +29,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -33,8 +38,9 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Prajeth</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
+            <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -44,7 +50,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-10">
-            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard <small>Manage Your Site</small></h1>
+            <h1><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard <small></small></h1>
           </div>
           <div class="col-md-2">
             <div class="dropdown create">
@@ -64,13 +70,7 @@
       </div>
     </header>
 
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">Dashboard</li>
-        </ol>
-      </div>
-    </section>
+
 
     <section id="main">
       <div class="container">
@@ -78,56 +78,56 @@
           <div class="col-md-3">
             <div class="list-group">
               <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Dashboard
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>MU Research Dashboard
               </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge">12</span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge">33</span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge">33</span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge">203</span></a>
+              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
+              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
+              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
+              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
 
-           
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Listed Users</h3>
+                <h3 class="panel-title">Available Tasks</h3>
               </div>
               <div class="panel-body">
                  <br>
-                <table class="table table-striped table-hover">
+               <!-- <div class="container">-->
+                <!-- <table class="table table-bordered"> -->
+                 <table class="table table-striped table-hover">
                        <?php
                      // Include config file
                     require_once 'config.php';
                     
                     // Attempt select query execution
-                    $sql = "SELECT userid,name,gender,age,email FROM users";
+                    $sql = "SELECT taskid,tname,tinstruction,tlink FROM task";
                   // Check if the query was executed
                     if($result = $pdo->query($sql)){
                       //check if there were an records in the table
                         if($result->rowCount() > 0){
                            // echo "<table class='table table-striped table-hover'>";
+                          //echo "<table border='1'>";
                                 echo "<thead>";
                                     echo "<tr>";
-                                        echo "<th>Name</th>";
-                                        echo "<th>Gender</th>";
-                                        echo "<th>Age</th>";
-                                        echo "<th>Email</th>";
+                                        echo "<th>Taskid</th>";
+                                        echo "<th>Taskname</th>";
                                         echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
                           //Fetch it untill the records are present in the table
                                 while($row = $result->fetch()){
                                     echo "<tr>";
-                                        echo "<td>" . $row['name'] . "</td>";
-                                        echo "<td>" . $row['gender'] . "</td>";
-                                        echo "<td>" . $row['age'] . "</td>";
-                                        echo "<td>" . $row['email'] . "</td>";
+                                        echo "<td>" . $row['taskid'] . "</td>";
+                                        echo "<td>" . $row['tname'] . "</td>";
                                         echo "<td>";
                                   //display read, update and elete records
-                                            echo "<a class='btn btn-default' href='edit_user.php?userid=". $row['userid'] ."'>edit</a>";
-                                            echo "<a class='btn btn-danger' href='delete_user.php?userid=". $row['userid'] ."'>delete</a>";
+                                            echo "<a class='btn btn-default' href='edit_task.php?taskid=". $row['taskid'] ."'>Edit</a>";
+                                            echo "<a class='btn btn-danger' href='delete_task.php?taskid=". $row['taskid'] ."'>Delete</a>";
+                                            echo "<a class='btn btn-default' href='readtask.php?taskid=". $row['taskid'] ."'>Details</a>";
+                                            //echo "<button class='btn btn-primary' name='abc' data-target='#addtask' data-toggle='modal' value = ". $row['taskid'] .">Visualizar</button>";            
                                             echo "</td>";
                                     echo "</tr>";
                                 }
@@ -146,6 +146,7 @@
                     unset($pdo); 
              ?>
                  </table>
+               
               </div>
               </div>
 
@@ -154,9 +155,9 @@
       </div>
     </section>
 
-  <!--  <footer id="footer">
+   <!-- <footer id="footer">
       <p>Copyright AdminStrap, &copy; 2017</p>
-    </footer>  -->
+    </footer> -->
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>

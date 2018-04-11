@@ -1,4 +1,8 @@
 <?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+<?php
 // Include config file
 include ('config.php');
  
@@ -85,7 +89,7 @@ $checkboxm = $_POST['name'];
                         else{echo "some error";}
                          // mysql_query($query) or die (mysql_error() );
                    }
-                header("location: orders.php");
+                header("location: orders.php?expid=". $expid ."");
               //this command is used to exit from the  if statement
                 exit();
               }
@@ -184,7 +188,8 @@ $checkboxm = $_POST['name'];
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -214,14 +219,6 @@ $checkboxm = $_POST['name'];
         </div>
       </div>
     </header>
-
-    <section id="breadcrumb">
-      <div class="container">
-        <ol class="breadcrumb">
-          <li class="active">MU Research Dashboard</li>
-        </ol>
-      </div>
-    </section>
 
     <section id="main">
       <div class="container">
@@ -298,7 +295,7 @@ $checkboxm = $_POST['name'];
                   </div>
                   <input type="hidden" name="expid" value="<?php echo $id; ?>"/>
                   <input type="hidden" name="orderid" value="<?php echo $ido; ?>"/>
-                  <input type="submit" class="btn btn-default" value="Submit">
+                  <input type="submit" class="btn btn-danger" value="Submit">
                   <a href="orders.php?expid=<?php echo $id; ?>" class="btn btn-default">Cancel</a>
                 </form> 
               </div>

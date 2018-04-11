@@ -1,10 +1,14 @@
 <?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
+<?php
 // Include config file
 require_once 'config.php';
  
 // Define variables and initialize with empty values
-$taskid = $tname = $tinstruction = $tlink = "";
-$taskid_err = $tname_err = $tinstruction_err = $tlink_err = "";
+$name = $gender = $age = $email = "";
+$name_err = $gender_err = $age_err = $email_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -12,54 +16,71 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $input_name = trim($_POST["name"]);
   //check if the field is empty
     if(empty($input_name)){
-        $tname_err = "Please enter a name.";
+        $name_err = "Please enter a name.";
       //Validate if there are any special characters
     } elseif(!filter_var(trim($_POST["name"]), FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z'-.\s ]+$/")))){
-        $tname_err = 'Please enter a valid name.';
+        $name_err = 'Please enter a valid name.';
     } else{
-        $tname = $input_name;
+        $name = $input_name;
     }
     
-    // Validate tinstruction
-    $input_tinstruction = trim($_POST["tinstruction"]);
+    // Validate address address
+    $input_gender = trim($_POST["gender"]);
   //check if the field is empty
-    if(empty($input_tinstruction)){
-        $tinstruction_err = 'Please enter an instruction.';     
+    if(empty($input_gender)){
+        $gender_err = 'Please enter an gender.';     
     } 
     else{
-        $tinstruction = $input_tinstruction;
+        $gender = $input_gender;
     }
     
     // Validate salary
-    $input_tlink = trim($_POST["tlink"]);
+    $input_age = trim($_POST["age"]);
   //check if the field is empty
-    if(empty($input_tlink)){
-        $tlink_err = "Please enter the link.";
+    if(empty($input_age)){
+        $age_err = "Please enter the age.";
       //check if the entered value is a positive digit
-    } else{
-       $tlink = $input_tlink;
+    } elseif(!ctype_digit($input_age)){
+        $age_err = 'Please enter a positive integer value.';
+    } 
+    elseif($input_age >'120'){
+    $age_err = 'please enter valid age';
+  }else{
+        $age = $input_age;
     }
     
+   //Validate Taxpaid
+   $input_email = trim($_POST["email"]);
+  //check if the field is empty
+    if(empty($input_email)){
+        $email_err = "Please enter email."; 
+      //check if the entered value is a positive digit
+    }else{
+        $email = $input_email;
+    }
+
     // Check input errors before inserting in database
-    if(empty($tname_err) && empty($tinstruction_err) && empty($tlink_err) ){
+    if(empty($name_err) && empty($gender_err) && empty($age_err) && empty($email_err)){
         // Prepare an insert statement
-       $sql = "INSERT INTO task (tname, tinstruction, tlink) VALUES (:tname, :tinstruction, :tlink)";
+        $sql = "INSERT INTO users (name, gender, age, email) VALUES (:name, :gender, :age, :email)";
  
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(':tname', $param_tname);
-            $stmt->bindParam(':tinstruction', $param_tinstruction);
-            $stmt->bindParam(':tlink', $param_tlink);
+            $stmt->bindParam(':name', $param_name);
+            $stmt->bindParam(':gender', $param_gender);
+            $stmt->bindParam(':age', $param_age);
+            $stmt->bindParam(':email', $param_email);
                        
             // Set parameters
-            $param_tname = $tname;
-            $param_tinstruction = $tinstruction;
-            $param_tlink = $tlink;
+            $param_name = $name;
+            $param_gender = $gender;
+            $param_age = $age;
+            $param_email = $email;
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 // Records created successfully. Redirect to data page
-                header("location: Task.php");
+                header("location: users.php");
               //this command is used to exit from the  if statement 
                 exit();
             } else{
@@ -111,8 +132,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Welcome, Prajeth</a></li>
-            <li><a href="login.html">Logout</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
+            <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -142,8 +164,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </div>
     </header>
 
-
-
     <section id="main">
       <div class="container">
         <div class="row">
@@ -157,33 +177,43 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
               <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
               <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
             </div>
+
+
           </div>
           <div class="col-md-9">
             <!-- Website Overview -->
             <div class="panel panel-default">
               <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Create task</h3>
+                <h3 class="panel-title">Create New User</h3>
               </div>
               <div class="panel-body">
                  <br>
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                  <div class="form-group <?php echo (!empty($tname_err)) ? 'has-error' : ''; ?>">
-                    <label>Taskname</label>
-                    <input type="text" name="name" class="form-control" value="<?php echo $tname; ?>">
-                    <span class="help-block"><?php echo $tname_err;?></span>
+                  <div class="form-group <?php echo (!empty($name_err)) ? 'has-error' : ''; ?>">
+                    <label>Name</label>
+                    <input type="text" name="name" class="form-control" value="<?php echo $name; ?>">
+                    <span class="help-block"><?php echo $name_err;?></span>
                   </div>
-                  <div class="form-group <?php echo (!empty($tinstruction_err)) ? 'has-error' : ''; ?>">
-                    <label>Task Instruction</label>
-                    <input type="text" name="tinstruction" class="form-control" value="<?php echo $tinstruction; ?>">
-                     <span class="help-block"><?php echo $tinstruction_err;?></span>
+                  <div class="form-group <?php echo (!empty($gender_err)) ? 'has-error' : ''; ?>">
+                    <label>Gender</label>
+                    <select class="form-control" name="gender" value="<?php echo $gender; ?>">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="NA">NA</option>
+                    </select>
                   </div>
-                  <div class="form-group <?php echo (!empty($tlink_err)) ? 'has-error' : ''; ?>">
-                    <label>Tasklink</label>
-                    <input type="text" name="tlink"class="form-control" value="<?php echo $tlink; ?>">
-                    <span class="help-block"><?php echo $tlink_err;?></span>
+                   <div class="form-group <?php echo (!empty($age_err)) ? 'has-error' : ''; ?>">
+                    <label>Age</label>
+                    <input type="text" name="age" class="form-control" value="<?php echo $age; ?>">
+                     <span class="help-block"><?php echo $age_err;?></span>
                   </div>
-                  <input type="submit" class="btn btn-default" value="Submit">
-                  <a href="Task.php" class="btn btn-default">Cancel</a>
+                  <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+                    <label>Email</label>
+                    <input type="text" name="email"class="form-control" value="<?php echo $email; ?>">
+                    <span class="help-block"><?php echo $email_err;?></span>
+                  </div>
+                  <input type="submit" class="btn btn-danger" value="Submit">
+                  <a href="users.php" class="btn btn-default">Cancel</a>
                 </form> 
              </div>
               </div>
@@ -193,7 +223,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       </div>
     </section>
 
-
+   <!-- <footer id="footer">
+      <p>Copyright AdminStrap, &copy; 2017</p>
+    </footer> -->
       <script>
      CKEDITOR.replace( 'editor1' );
  </script>

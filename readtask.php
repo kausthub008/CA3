@@ -1,3 +1,7 @@
+<?php
+//call the default.php page which takes care of unexpected exit from browser and brings back user to same state once he logs in
+        include("default.php");  
+ ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,7 +28,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="index.php">MU Research Dashboard</a></li>
             
             <li><a href="users.php">Users</a></li>
             <li><a href="Task.php">Task</a></li>
@@ -33,7 +37,8 @@
             
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a>Welcome</a></li>
+            <?php  echo " <li><a href='edit_signup.php'>Welcome ". $_SESSION['login_user'];
+           echo " </a></li>";?>
             <li><a href="login.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -64,78 +69,62 @@
       </div>
     </header>
 
-  
+
 
     <section id="main">
       <div class="container">
         <div class="row">
-          <div class="col-md-3">
-            <div class="list-group">
-              <a href="index.php" class="list-group-item active main-color-bg">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> MU Research Dashboard
-              </a>
-              <a href="Task.php" class="list-group-item"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Task <span class="badge"></span></a>
-              <a href="Study.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Study <span class="badge"></span></a>
-              <a href="Experiment.php" class="list-group-item"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Experiment <span class="badge"></span></a>
-              <a href="users.php" class="list-group-item"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users <span class="badge"></span></a>
-            </div>
+             <!-- Add Task -->
 
-          </div>
-          <div class="col-md-9">
-            <!-- Website Overview -->
-            <div class="panel panel-default">
-              <div class="panel-heading main-color-bg">
-                <h3 class="panel-title">Experiment Details</h3>
-              </div>
-              <div class="panel-body">
-                <?php
-                  //get the exp if from previous page
-                  $id = $_GET['expid'];
-                  //if expid is present
-                  if(isset($id) && !empty($id)){
-                  //include configuration
+           <?php
+        require_once 'config.php';
+         $id = $_GET['taskid'];
+        
+        if(isset($id) && !empty($id)){
+                
                   require_once 'config.php';
-                  $sql ="SELECT b.taskid as TaskID,b.tname as TaskName FROM taskexp a,task b where a.expid = '". $id ."' and a.taskid=b.taskid";
-                  echo "<label>Associated Task</label>";
-                  
-                  echo "<table border='1'>
-                  <tr>
-                  <th>TaskID</th>
-                  <th>TaskName</th>
-                  </tr>";
-                 if($result = $pdo->query($sql)){
-                 
-                  while($row = $result->fetch())
-                  {
-                      echo "<tr>";
-                      echo "<td>" . $row['TaskID'] . "</td>";
-                      echo "<td>" . $row['TaskName'] . "</td>";
-                      echo "</tr>";
-                   }
-                    }                  
-                    echo "</table>";
-                }else{
+                  $abc = "SELECT taskid,tname,tinstruction,tlink FROM task WHERE taskid = $id";
+      
+        $pat = $pdo->query($abc);
+        $row1 = $pat->fetch();
+        } else{
     // Check existence of id parameter
-    if(empty(trim($_GET["expid"]))){
-        // URL doesn't contain id parameter. Redirect to error page
-        header("location: error.php");
+    if(empty(trim($_GET["taskid"]))){
+        
         exit();
     }
 }
- echo "<br>";
-  //navigation buttons
- echo "<a class='btn btn-default' href='create_order.php?expid=".$id."'>create order</a>";
- echo "<a class='btn btn-danger' href='orders.php?expid=".$id."'>orders</a>";
- echo "<a class='btn btn-default' href='Experiment.php'>back</a>";
-?>
-              </div>
-              </div>
-          </div>
+        
+        ?>
+      <form>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Task ID</label>
+          <input type="text" class="form-control" value="<?php echo $row1[taskid]; ?>" readonly></a>
+        </div>
+        <div class="form-group">
+          <label>Task Name</label>
+          <input type="text" class="form-control" value="<?php echo $row1[tname]; ?>" readonly>
+        </div>
+      
+        <div class="form-group">
+          <label>Task instruction</label>
+          <input type="text" class="form-control" value="<?php echo $row1[tinstruction]; ?>" readonly>
+        </div>
+        <div class="form-group">
+          <label>Task link</label>
+          <input type="text" class="form-control" href = "<?php echo $row1[tlink]; ?>" value = "<?php echo $row1[tlink]; ?>"  readonly>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a type="button" href="Task.php" class="btn btn-primary" >Back</a>
+      </div>
+    </form>
+  
+          </div> 
         </div>
       </div>
     </section>
-
-
    
   <script>
      CKEDITOR.replace( 'editor1' );
